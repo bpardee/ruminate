@@ -1,0 +1,17 @@
+#!<%= ruby_shebang %>
+
+require '<%= ruminate_plugin %>'
+
+ruminate(
+    ARGV[0],
+    '<%= rumx_mount %>',
+    <%= username && username.inspect %>,
+    <%= password && password.inspect %>,
+    '<%= host %>',
+    <%= port %>,
+    '<%= smtp_host %>',
+    <%= config_params.inspect %>,
+    '<%= query %>',
+    <%= fields.inspect %>,
+    <%= alerts.inspect %>
+)
