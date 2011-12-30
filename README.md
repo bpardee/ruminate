@@ -94,6 +94,12 @@ When you deploy, perform the following:
 
 ## TODO
 
+Too much repitition.  Create templates for plot stuff in timers, etc.
+
+Probably need to modify rumx bean to not reset error counts.  Use trending for info.
+
+Make sure the example above actually works.
+
 ## Author
 
 Brad Pardee
