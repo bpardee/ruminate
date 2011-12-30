@@ -1,17 +1,13 @@
 require 'yaml'
-require 'erb'
 require 'fileutils'
 
 module Ruminate
   require 'ruminate/railtie' if defined?(Rails)
 
   def self.create_plugins(config_file, ruminate_dir, plugin_dir)
-    #plugin_dir = File.join(ruminate_dir, 'plugins')
     FileUtils.rm_rf(plugin_dir)
     FileUtils.mkdir_p(plugin_dir)
     config = YAML.load(File.read(config_file))
-    erb = ERB.new(File.read(File.expand_path('../../config/plugin.erb', __FILE__)))
-    # Setup erb environment
     ruminate_plugin = File.expand_path('../ruminate/plugin.rb', __FILE__)
     rumx_mount      = config['rumx_mount']   || ''
     username        = config['username']
@@ -45,8 +41,27 @@ module Ruminate
           end
           name = plugin_basename
           name += '_' + graph_config[:name] if graph_config[:name]
+          puts "Creating #{name}"
           File.open(File.join(plugin_dir, name), 'w', 0755) do |f|
-            f.write(erb.result(binding))
+            f.write <<-EOS
+#!#{ruby_shebang}
+
+require '#{ruminate_plugin}'
+
+ruminate(
+    ARGV[0],
+    '#{rumx_mount}',
+    #{username && username.inspect},
+    #{password && password.inspect},
+    '#{host}',
+    #{port},
+    '#{smtp_host}',
+    #{config_params.inspect},
+    '#{query}',
+    #{fields.inspect},
+    #{alerts.inspect}
+)
+            EOS
           end
         end
       end
@@ -54,6 +69,22 @@ module Ruminate
   end
 
   def self.create_links(config_file, plugin_dir)
-
+    config = YAML.load(File.read(config_file))
+    munin_plugin_dir = config['munin_plugin_dir'] || '/etc/munin/plugins'
+    plugin_dir = File.expand_path(plugin_dir)
+    Dir["#{munin_plugin_dir}/*"].each do |plugin_file|
+      next unless File.symlink?(plugin_file)
+      dest = File.readlink(plugin_file)
+      if dest.start_with?(plugin_dir)
+        puts "Removing #{plugin_file}"
+        FileUtils.rm(plugin_file)
+      end
+    end
+    Dir["#{plugin_dir}/*"].each do |plugin_file|
+      new_plugin_file = File.join(munin_plugin_dir, File.basename(plugin_file))
+      puts "Creating link for #{new_plugin_file}"
+      File.symlink(plugin_file, new_plugin_file)
+    end
+    system '/etc/init.d/munin-node restart'
   end
 end

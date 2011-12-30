@@ -48,14 +48,14 @@ def ruminate(arg0, rumx_mount, username, password, host, port, smtp_host, config
     alerts.each do |alert|
       filter = String.new(alert.filter)
       result_hash.each do |field_name, value|
-        filter.gsub!(field_name, value.inspect)
+        filter.gsub!(Regexp.new("\\b#{field_name.gsub('.', '\\.')}\\b"), value.inspect)
       end
       status = false
       begin
         if eval(filter)
           filter = String.new(alert.filter)
           result_hash.each do |field_name, value|
-            filter.gsub!(field_name, "#{field_name}(#{value})")
+            filter.gsub!(Regexp.new("\\b#{field_name.gsub('.', '\\.')}\\b"), "#{field_name}(#{value})")
           end
           message = <<-EOM
 The following filter has been triggered:
@@ -76,6 +76,3 @@ Evaled Filter:   #{filter}
     end
   end
 end
-#:title: LST response time exceeded threshold
-#:filter: avg_time > 1000
-#:email: :itstaff
