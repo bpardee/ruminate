@@ -42,7 +42,8 @@ Add Rumx beans for the parts of the app that you want to monitor.  For instance,
     end
 
 Create a directory config/ruminate and put yaml files representing the monitoring that you want to perform.  For instance,
-you might create the file config/ruminate/my_model.yml that looks as follows:
+you might create the file config/ruminate/my_model.yml that looks as follows (All of the fields prefixed with graph_ and under
+plots are related to munin fields, see the munin documentation for what those mean.  The others should be fairly self explanatory):
 
     MyModel:
       - :name: times
