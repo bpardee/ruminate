@@ -35,7 +35,7 @@ module Ruminate
 
           fields = graph_config[:plot].map {|field_hash| field_hash[:field]}
           query = graph_config[:query]
-          alerts = graph_config[:alerts] || []
+          alerts = graph_config[:alert] || []
           alerts.each do |alert|
             alert[:email] = config['email'][alert[:email]] if alert[:email].kind_of?(Symbol)
           end

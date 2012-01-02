@@ -39,21 +39,24 @@ def ruminate(arg0, rumx_mount, username, password, host, port, smtp_host, config
     result_hash = {}
     res.body.split("\n").each do |line|
       if (i = line.index('=')) >= 0
-        result_hash[line[0,i]] = line[(i+1)..-1]
+        value = line[(i+1)..-1]
+        # TODO: Necessary to do an integer check?
+        value = value.to_f if value.match(/^\s*[+-]?((\d+_?)*\d+(\.(\d+_?)*\d+)?|\.(\d+_?)*\d+)(\s*|([eE][+-]?(\d+_?)*\d+)\s*)$/)
+        result_hash[line[0,i]] = value
       end
     end
     fields.each_with_index do |field_name, i|
       puts "field#{i}.value #{result_hash[field_name]}"
     end
     alerts.each do |alert|
-      filter = String.new(alert.filter)
+      filter = String.new(alert[:filter])
       result_hash.each do |field_name, value|
         filter.gsub!(Regexp.new("\\b#{field_name.gsub('.', '\\.')}\\b"), value.inspect)
       end
       status = false
       begin
         if eval(filter)
-          filter = String.new(alert.filter)
+          filter = String.new(alert[:filter])
           result_hash.each do |field_name, value|
             filter.gsub!(Regexp.new("\\b#{field_name.gsub('.', '\\.')}\\b"), "#{field_name}(#{value})")
           end
@@ -62,16 +65,16 @@ The following filter has been triggered:
 
 #{filter}
           EOM
-          send_email(smtp_host, filter[:email], "ALERT: #{alert[:title]}", message)
+          send_email(smtp_host, alert[:email], "ALERT: #{alert[:title]}", message)
         end
       rescue Exception => e
         message = <<-EOM
-The following filter caused exception #{e.message}:
+The following filter caused an exception #{e.message}:
 
-Original Filter: #{alert.filter}
+Original Filter: #{alert[:filter]}
 Evaled Filter:   #{filter}
         EOM
-        send_email(smtp_host, filter[:email], "ALERT EXCEPTION: #{alert[:title]}", message)
+        send_email(smtp_host, alert[:email], "ALERT EXCEPTION: #{alert[:title]}", message)
       end
     end
   end
