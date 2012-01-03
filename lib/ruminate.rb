@@ -85,6 +85,6 @@ ruminate(
       puts "Creating link for #{new_plugin_file}"
       File.symlink(plugin_file, new_plugin_file)
     end
-    system '/etc/init.d/munin-node restart'
+    #system '/etc/init.d/munin-node restart'
   end
 end
