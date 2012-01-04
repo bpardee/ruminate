@@ -92,14 +92,17 @@ When you deploy, perform the following:
 
     rake ruminate:create_plugins
     sudo rake ruminate:create_links
+    sudo /etc/init.d/munin-node restart
 
 ## TODO
 
 Too much repitition.  Create templates for plot stuff in timers, etc.
 
-Probably need to modify rumx bean to not reset error counts.  Use trending for info.
-
 Make sure the example above actually works.
+
+The task ruminate:create_links has a bug for capistrano based deploys.  The problem is that it tries
+to remove the links whose path matches the current config/ruminate/plugins path but this has changed
+with the new timestamped release.  
 
 ## Author
 

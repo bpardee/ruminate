@@ -11,7 +11,7 @@ To: <#{to}>
 From: <#{from}>
 Subject: #{subject}
 
-  #{message}
+#{message}
   EOM
 
   Net::SMTP.start(smtp_host) do |smtp|
