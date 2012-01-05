@@ -6,6 +6,6 @@ Gem::Specification.new do |s|
   s.email       = ['bradpardee@gmail.com']
   s.homepage    = 'http://github.com/ClarityServices/ruminate'
   s.files       = Dir["{lib}/**/*"] + %w(LICENSE.txt Rakefile History.md README.md)
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.add_dependency 'rumx', '>= 0.1.1'
 end

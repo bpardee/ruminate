@@ -100,14 +100,10 @@ Too much repitition.  Create templates for plot stuff in timers, etc.
 
 Make sure the example above actually works.
 
-The task ruminate:create_links has a bug for capistrano based deploys.  The problem is that it tries
-to remove the links whose path matches the current config/ruminate/plugins path but this has changed
-with the new timestamped release.  
-
 ## Author
 
 Brad Pardee
 
 ## Copyright
 
-Copyright (c) 2011 Clarity Services. See LICENSE for details.
+Copyright (c) 2011-2012 Clarity Services. See LICENSE for details.

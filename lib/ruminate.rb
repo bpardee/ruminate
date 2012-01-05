@@ -71,16 +71,16 @@ ruminate(
   def self.create_links(config_file, plugin_dir)
     config = YAML.load(File.read(config_file))
     munin_plugin_dir = config['munin_plugin_dir'] || '/etc/munin/plugins'
-    plugin_dir = File.expand_path(plugin_dir)
+    full_plugin_dir = File.expand_path(plugin_dir)
     Dir["#{munin_plugin_dir}/*"].each do |plugin_file|
       next unless File.symlink?(plugin_file)
       dest = File.readlink(plugin_file)
-      if dest.start_with?(plugin_dir)
+      if File.dirname(dest).end_with?(plugin_dir)
         puts "Removing #{plugin_file}"
-        FileUtils.rm(plugin_file)
+        FileUtils.rm_f(plugin_file)
       end
     end
-    Dir["#{plugin_dir}/*"].each do |plugin_file|
+    Dir["#{full_plugin_dir}/*"].each do |plugin_file|
       new_plugin_file = File.join(munin_plugin_dir, File.basename(plugin_file))
       puts "Creating link for #{new_plugin_file}"
       File.symlink(plugin_file, new_plugin_file)
