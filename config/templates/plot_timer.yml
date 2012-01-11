@@ -1,0 +1,16 @@
+:requires: measurement
+:graph_args: --base 1000 -l 0
+:graph_vlabel: msec
+:plot:
+  - :label: avg
+    :info: Average time of %measurement%
+    :draw: LINE
+    :field: avg_time
+  - :label: min
+    :info: Min time of %measurement%
+    :draw: LINE
+    :field: min_time
+  - :label: max
+    :info: Max time of %measurement%
+    :draw: LINE
+    :field: max_time

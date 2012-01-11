@@ -40,8 +40,11 @@ def ruminate(arg0, rumx_mount, username, password, host, port, smtp_host, config
     res.body.split("\n").each do |line|
       if (i = line.index('=')) >= 0
         value = line[(i+1)..-1]
-        # TODO: Necessary to do an integer check?
-        value = value.to_f if value.match(/^\s*[+-]?((\d+_?)*\d+(\.(\d+_?)*\d+)?|\.(\d+_?)*\d+)(\s*|([eE][+-]?(\d+_?)*\d+)\s*)$/)
+        if value.match(/^\s*[+-]?\d+\s*$/)
+          value = value.to_i
+        elsif value.match(/^\s*[+-]?((\d+_?)*\d+(\.(\d+_?)*\d+)?|\.(\d+_?)*\d+)(\s*|([eE][+-]?(\d+_?)*\d+)\s*)$/)
+          value = value.to_f
+        end
         result_hash[line[0,i]] = value
       end
     end
@@ -64,6 +67,9 @@ def ruminate(arg0, rumx_mount, username, password, host, port, smtp_host, config
 The following filter has been triggered:
 
 #{filter}
+
+Output:
+#{res.body}
           EOM
           send_email(smtp_host, alert[:email], "ALERT: #{alert[:title]}", message)
         end
@@ -73,8 +79,12 @@ The following filter caused an exception #{e.message}:
 
 Original Filter: #{alert[:filter]}
 Evaled Filter:   #{filter}
+
+Output:
+#{res.body}
         EOM
         send_email(smtp_host, alert[:email], "ALERT EXCEPTION: #{alert[:title]}", message)
+        raise
       end
     end
   end
