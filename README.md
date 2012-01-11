@@ -96,7 +96,7 @@ When you deploy, perform the following:
 
 ## TODO
 
-Too much repitition.  Create templates for plot stuff in timers, etc.
+Use deep_merge for better templating?
 
 Make sure the example above actually works.
 
