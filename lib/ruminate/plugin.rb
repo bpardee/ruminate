@@ -38,7 +38,7 @@ def ruminate(arg0, rumx_mount, username, password, host, port, smtp_host, config
   if res.kind_of?(Net::HTTPSuccess)
     result_hash = {}
     res.body.split("\n").each do |line|
-      if (i = line.index('=')) >= 0
+      if i = line.index('=')
         value = line[(i+1)..-1]
         if value.match(/^\s*[+-]?\d+\s*$/)
           value = value.to_i
