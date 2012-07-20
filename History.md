@@ -1,6 +1,10 @@
 Ruminate Changelog
 =====================
 
+0.0.5
+
+ - Remove deprecated railtie_name
+
 0.0.4
 
  - Bug fix for intermittent errors caused by me thinking I'm still coding in c.
