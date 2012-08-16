@@ -76,8 +76,8 @@ ruminate(
     full_plugin_dir = File.expand_path(plugin_dir)
     Dir["#{munin_plugin_dir}/*"].each do |plugin_file|
       next unless File.symlink?(plugin_file)
-      dest = File.readlink(plugin_file)
-      if File.dirname(dest).end_with?(plugin_dir)
+      dest = File.readlink(plugin_file) rescue nil
+      if !dest || File.dirname(dest).end_with?(plugin_dir)
         puts "Removing #{plugin_file}"
         FileUtils.rm_f(plugin_file)
       end

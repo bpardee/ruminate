@@ -1,6 +1,10 @@
 Ruminate Changelog
 =====================
 
+0.0.6
+
+ - Handle stale links a little better.
+
 0.0.5
 
  - Remove deprecated railtie_name
